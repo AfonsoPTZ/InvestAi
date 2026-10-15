@@ -7,6 +7,8 @@ Header always unset X-Content-Security-Policy
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    # Dashboard de testes automatizados (acesso restrito ao admin, ver testes.php)
+    RewriteRule ^test/?$ frontend/public/pages/admin/testes.php [L,QSA]
 </IfModule>
 
 # Bloquear acesso via HTTP a arquivos sensíveis (segredos, config, dados, controle de versão)

@@ -1,0 +1,51 @@
+# Ambiente local de desenvolvimento (não é usado no deploy do Railway).
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: investai
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./backend/database/schema_investai.sql:/docker-entrypoint-initdb.d/1-schema.sql:ro
+      - ./backend/database/seed_investai.sql:/docker-entrypoint-initdb.d/2-seed.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      interval: 5s
+      retries: 20
+
+  app:
+    build: .
+    env_file: .env
+    ports:
+      - "8080:80"
+    networks:
+      default:
+        # Alias usado pelo robot-runner: o Chromium força HTTPS em "app" (TLD .app tem HSTS pré-carregado).
+        aliases: [investai-web]
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # Executor do Robot Framework: sem porta publicada, só o app o alcança pela rede interna.
+  robot-runner:
+    build:
+      context: ./tests-robot
+      dockerfile: runner/Dockerfile
+    env_file: ./tests-robot/.env
+    environment:
+      # "localhost" dentro do container seria o próprio runner; host.docker.internal chega na porta 8080 publicada no host.
+      ROBOT_BASE_URL: http://host.docker.internal:8080
+      RUNNER_TOKEN: ${TEST_RUNNER_TOKEN:?defina TEST_RUNNER_TOKEN no .env}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - robot_results:/robot/results
+      - ./tests-robot/tests:/robot/tests:ro
+      - ./tests-robot/resources:/robot/resources:ro
+    depends_on:
+      - app
+
+volumes:
+  dbdata:
+  robot_results:

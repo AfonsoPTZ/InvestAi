@@ -1,0 +1,3 @@
+# Versões alinhadas com a imagem marketsquare/robotframework-browser:20.5.0
+robotframework==7.5
+robotframework-browser==20.5.0

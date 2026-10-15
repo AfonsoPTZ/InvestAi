@@ -1,0 +1,274 @@
+/**
+ * testes.css — Dashboard de testes automatizados (/test)
+ * Complementa admin.css e internal-pages.css usando os tokens de variables.css.
+ */
+
+/* ── Cabeçalho + ações ────────────────────────────────────────────────────── */
+.testes-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.testes-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.9rem;
+}
+
+.testes-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.testes-acoes .btn {
+    font-family: 'Outfit', sans-serif;
+    border-radius: 10px;
+}
+
+.testes-acoes .btn-primary {
+    background: var(--brand-accent);
+    border-color: var(--brand-accent);
+    color: #14121a;
+    font-weight: 600;
+}
+
+.testes-acoes .btn-primary:hover:not(:disabled) {
+    background: var(--primary-hover);
+    border-color: var(--primary-hover);
+}
+
+.testes-acoes .btn-outline-secondary,
+.testes-table .btn-outline-secondary {
+    border-color: rgba(255, 255, 255, 0.15);
+    color: var(--text-muted);
+}
+
+.testes-acoes .btn-outline-secondary:hover,
+.testes-table .btn-outline-secondary:hover {
+    background: rgba(179, 157, 219, 0.1);
+    border-color: var(--brand-accent);
+    color: var(--brand-accent);
+}
+
+.text-muted-sm {
+    color: var(--text-muted);
+    font-size: 0.82rem;
+}
+
+/* ── Badges de status (ícone + texto, nunca só cor) ───────────────────────── */
+.badge-teste {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 20px;
+    font-size: 0.76rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.badge-teste.ok      { background: rgba(102, 187, 106, 0.15); color: var(--color-gain); }
+.badge-teste.fail    { background: rgba(239, 154, 154, 0.15); color: var(--color-expense); }
+.badge-teste.skip    { background: rgba(255, 183, 77, 0.15);  color: var(--status-warn); }
+.badge-teste.running { background: rgba(179, 157, 219, 0.15); color: var(--brand-accent); }
+.badge-teste.neutro  { background: rgba(255, 255, 255, 0.06); color: var(--text-muted); }
+
+.txt-ok   { color: var(--color-gain); }
+.txt-fail { color: var(--color-expense); }
+.txt-skip { color: var(--status-warn); }
+
+/* ── Avisos ───────────────────────────────────────────────────────────────── */
+.testes-aviso {
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.25rem;
+    font-size: 0.88rem;
+    border: 1px solid var(--border-color);
+}
+
+.testes-aviso code { color: inherit; opacity: 0.9; }
+.testes-aviso.info    { background: rgba(179, 157, 219, 0.1); border-color: rgba(179, 157, 219, 0.3); color: var(--brand-accent); }
+.testes-aviso.sucesso { background: rgba(102, 187, 106, 0.1); border-color: rgba(102, 187, 106, 0.3); color: var(--color-gain); }
+.testes-aviso.alerta  { background: rgba(255, 183, 77, 0.1);  border-color: rgba(255, 183, 77, 0.3);  color: var(--status-warn); }
+.testes-aviso.erro    { background: rgba(239, 154, 154, 0.1); border-color: rgba(239, 154, 154, 0.3); color: var(--color-expense); }
+
+/* ── Cards ────────────────────────────────────────────────────────────────── */
+.testes-cards {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+.testes-cards .summary-card .label { color: var(--text-muted); }
+.testes-cards .value.ok   { color: var(--color-gain); }
+.testes-cards .value.fail { color: var(--color-expense); }
+.testes-cards .value.skip { color: var(--status-warn); }
+
+/* ── Tabelas ──────────────────────────────────────────────────────────────── */
+.testes-secao-titulo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.testes-secao-titulo h2 {
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.testes-secao-titulo h2 i { color: var(--brand-accent); }
+
+.testes-table { min-width: 720px; }
+
+.teste-nome { font-weight: 600; }
+.teste-suite { color: var(--text-muted); font-size: 0.75rem; }
+
+.teste-msg {
+    display: inline-block;
+    max-width: 320px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    vertical-align: middle;
+}
+
+.testes-table tr.linha-ativa td {
+    background: rgba(179, 157, 219, 0.06);
+}
+
+/* ── Modal de detalhes ────────────────────────────────────────────────────── */
+#modal-teste .modal-content {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    color: var(--text-main);
+}
+
+#modal-teste .modal-header { border-bottom: 1px solid var(--border-color); }
+#modal-teste .modal-title { font-size: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+#modal-teste .modal-title i { color: var(--brand-accent); }
+#modal-teste .btn-close { filter: invert(1) brightness(0.6); }
+
+.teste-detalhes dt {
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.teste-detalhes dd { margin-bottom: 0.9rem; font-size: 0.9rem; }
+
+.teste-detalhes pre,
+.lista-etapas code {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.teste-detalhes pre {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 0.75rem;
+    color: var(--color-expense);
+    font-size: 0.8rem;
+    margin: 0;
+}
+
+.detalhe-titulo {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin: 1.25rem 0 0.6rem;
+}
+
+.lista-etapas {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.lista-etapas .etapa {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    font-size: 0.82rem;
+}
+
+.lista-etapas .etapa code { color: var(--text-main); flex: 1; min-width: 0; }
+.lista-etapas .etapa.ok > i   { color: var(--color-gain); }
+.lista-etapas .etapa.fail     { background: rgba(239, 154, 154, 0.08); }
+.lista-etapas .etapa.fail > i { color: var(--color-expense); }
+.lista-etapas .etapa.skip > i { color: var(--status-warn); }
+.etapa-tempo { color: var(--text-muted); font-size: 0.75rem; white-space: nowrap; }
+.etapa-falha { width: 100%; color: var(--color-expense); font-size: 0.78rem; padding-left: 1.4rem; }
+
+.lista-metricas {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0.9rem;
+}
+
+.lista-metricas li {
+    padding: 0.4rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.metrica-nome {
+    opacity: 0.8;
+}
+
+.teste-captura {
+    max-width: 100%;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+}
+
+@media (max-width: 576px) {
+    .testes-acoes { width: 100%; }
+    .testes-acoes .btn { flex: 1 1 auto; }
+}
+
+/* Telas estreitas: cada linha vira um card empilhado, sem rolagem horizontal */
+@media (max-width: 768px) {
+    .testes-table { min-width: 0; }
+    .testes-table thead { display: none; }
+    .testes-table tr { display: block; padding: 0.85rem 1rem; border-bottom: 1px solid var(--border-color); }
+    .testes-table tr:last-child { border-bottom: none; }
+    .testes-table td { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.25rem 0; border: none; }
+    .testes-table td[data-label]::before {
+        content: attr(data-label);
+        color: var(--text-muted);
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    .testes-table td.text-end { justify-content: flex-end; padding-top: 0.5rem; }
+    .testes-table td.admin-empty, .testes-table td.admin-loading { display: block; }
+    .teste-msg { max-width: 60vw; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .testes-cards .summary-card { transition: none; }
+    .testes-cards .summary-card:hover { transform: none; }
+}

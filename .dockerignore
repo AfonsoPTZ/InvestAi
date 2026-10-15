@@ -1,0 +1,4 @@
+# Itens que não devem entrar na imagem da aplicação (deploy)
+.git
+tests-robot
+docker-compose.yml

@@ -51,6 +51,7 @@ Logger::log('INFO', 'ADMIN_ACCESS', ['secao' => 'painel'], 'sucesso', $usuario_i
                 <span class="nav-link-custom active" style="cursor:default">
                     <i class="bi bi-shield-lock-fill me-1" style="color:var(--brand-accent)"></i>Admin
                 </span>
+                <a href="../../../../test" class="nav-link-custom"><i class="bi bi-robot me-1"></i>Testes</a>
                 <a href="../../../logout.php" class="nav-link-custom" title="Sair"><i class="bi bi-box-arrow-right"></i></a>
             </div>
         </div>

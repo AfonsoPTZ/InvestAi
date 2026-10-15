@@ -1,0 +1,2 @@
+# Pasta de testes: nunca servir via Apache (XAMPP ou imagem que a inclua por engano)
+Require all denied
