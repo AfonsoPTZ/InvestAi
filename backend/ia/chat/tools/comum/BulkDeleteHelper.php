@@ -5,7 +5,7 @@
 
 class BulkDeleteHelper {
 
-    public static function obterResumo(mysqli $conexao, string $tabela, string $colunaValor, int $usuario_id): array {
+    public static function obterResumo(SqliteConnection $conexao, string $tabela, string $colunaValor, int $usuario_id): array {
         $stmt = $conexao->prepare(
             "SELECT COUNT(*) AS total, COALESCE(SUM($colunaValor), 0) AS soma
              FROM $tabela WHERE usuario_id = ?"
@@ -21,7 +21,7 @@ class BulkDeleteHelper {
         ];
     }
 
-    public static function apagarTudo(mysqli $conexao, string $tabela, int $usuario_id): array {
+    public static function apagarTudo(SqliteConnection $conexao, string $tabela, int $usuario_id): array {
         $stmt = $conexao->prepare("DELETE FROM $tabela WHERE usuario_id = ?");
         $stmt->bind_param('i', $usuario_id);
         $ok = $stmt->execute();

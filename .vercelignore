@@ -1,0 +1,11 @@
+.env
+.git
+logs
+docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+backend/database/data
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm

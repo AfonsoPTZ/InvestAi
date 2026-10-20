@@ -1,4 +1,11 @@
 # Itens que não devem entrar na imagem da aplicação (deploy)
 .git
+.env
+.gitignore
+logs
 tests-robot
 docker-compose.yml
+backend/database/data
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm

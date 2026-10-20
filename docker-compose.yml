@@ -1,31 +1,20 @@
-# Ambiente local de desenvolvimento (não é usado no deploy do Railway).
+# Ambiente local de desenvolvimento (na Vercel o deploy usa vercel.json, não este arquivo).
+# O banco é SQLite (arquivo), então não há serviço de banco de dados.
 services:
-  db:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: investai
-    volumes:
-      - dbdata:/var/lib/mysql
-      - ./backend/database/schema_investai.sql:/docker-entrypoint-initdb.d/1-schema.sql:ro
-      - ./backend/database/seed_investai.sql:/docker-entrypoint-initdb.d/2-seed.sql:ro
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
-      interval: 5s
-      retries: 20
-
   app:
     build: .
     env_file: .env
+    environment:
+      OLLAMA_URL: http://host.docker.internal:11434
     ports:
       - "8080:80"
+    volumes:
+      # Persiste o arquivo SQLite entre recriações do container
+      - inventai-data:/var/www/html/backend/database/data
     networks:
       default:
         # Alias usado pelo robot-runner: o Chromium força HTTPS em "app" (TLD .app tem HSTS pré-carregado).
         aliases: [investai-web]
-    depends_on:
-      db:
-        condition: service_healthy
 
   # Executor do Robot Framework: sem porta publicada, só o app o alcança pela rede interna.
   robot-runner:
@@ -47,5 +36,5 @@ services:
       - app
 
 volumes:
-  dbdata:
+  inventai-data:
   robot_results:

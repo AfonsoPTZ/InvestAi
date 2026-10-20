@@ -2,3 +2,10 @@ venv/
 .env
 *.log
 *.lock
+
+# Banco SQLite local (criado automaticamente na primeira execução)
+backend/database/data/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+.vercel

@@ -47,8 +47,11 @@ class ConfigHelper
                     $value = substr($value, 1, -1);
                 }
                 
-                $_ENV[$key] = $value;
-                putenv("$key=$value");
+                // Variáveis do ambiente de execução têm prioridade sobre o .env.
+                if (getenv($key) === false) {
+                    $_ENV[$key] = $value;
+                    putenv("$key=$value");
+                }
             }
         }
 

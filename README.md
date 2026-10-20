@@ -21,8 +21,8 @@ backend/
 ```
 
 O backend utiliza:
-- **PHP 7.4+** com orientação a objetos
-- **MySQL** para persistência de dados
+- **PHP 8.1+** com orientação a objetos
+- **SQLite** (PDO) para persistência de dados
 - **Google Gemini API** para análise inteligente
 - **Padrão MVC** com Controllers e Services
 
@@ -39,53 +39,65 @@ Front/
     └── js/                # Scripts JavaScript
 ```
 
-### Banco de Dados
+### Banco de Dados (SQLite)
 ```
-db/
-├── conexao.php            # Configuração e conexão
-├── schema.sql             # Estrutura das tabelas
-└── seed.sql               # Dados iniciais
+backend/database/
+├── conexao.php            # Abre a conexão ($conexao) usada pelas APIs
+├── Database.php           # Localiza/cria o arquivo .sqlite e aplica o schema
+├── SqliteCompat.php       # API estilo mysqli sobre PDO SQLite + tradução de SQL
+├── schema_sqlite.sql      # Estrutura das tabelas
+├── seed_sqlite.sql        # Dados de exemplo (opcional, DB_SEED=true)
+└── data/investai.sqlite   # Criado automaticamente (ignorado pelo git)
 ```
+
+O banco é um único arquivo. Na primeira execução o schema é aplicado sozinho —
+não há nada para importar nem servidor de banco para subir.
 
 ## 🚀 Instalação e Configuração
 
 ### Pré-requisitos
-- XAMPP (Apache + PHP + MySQL)
-- Google Gemini API Key
+- PHP 8.1+ com as extensões `pdo_sqlite`, `curl` e `mbstring` (ou Docker)
+- Chave da Google Gemini API (ou Ollama local)
 
-### Passos
+### Rodando localmente (terminal)
 
-1. **Clone ou copie para XAMPP**
+1. **Configure o ambiente**
    ```bash
-   cd c:\xampp\htdocs
-   # Copie a pasta inventai para aqui
+   cp .env.example .env     # Windows: copy .env.example .env
+   # edite .env: GEMINI_API_KEY, ADMIN_EMAIL, ADMIN_PASSWORD...
    ```
 
-2. **Configure o Banco de Dados**
+2. **Suba o servidor embutido do PHP**
    ```bash
-   # Via phpMyAdmin ou MySQL CLI
-   mysql -u root -p < db/schema.sql
-   mysql -u root -p < db/seed.sql
+   php -S localhost:8000 router.php
+   # Acesse: http://localhost:8000
    ```
+   O `router.php` faz o papel do `.htaccess` (bloqueia `.env`, `.sqlite`, `.sql`...).
 
-3. **Configure a Conexão do Banco**
-   - Edite `db/conexao.php` com suas credenciais MySQL:
-   ```php
-   $host = 'localhost';
-   $db = 'seu_database';
-   $usuario = 'seu_usuario';
-   $senha = 'sua_senha';
-   ```
+Para recomeçar do zero, apague `backend/database/data/investai.sqlite`.
 
-4. **Configure a Google Gemini API**
-   - Obtenha sua chave em: https://ai.google.dev/
-   - Adicione a chave no arquivo de configuração apropriado
+### Rodando com Docker
+```bash
+docker compose up --build
+# Acesse: http://localhost:8080
+```
 
-5. **Inicie o servidor**
-   ```bash
-   # Inicie Apache e MySQL no XAMPP
-   # Acesse: http://localhost/inventai
-   ```
+## ☁️ Deploy na Vercel
+
+O projeto já está pronto para importar do GitHub (`vercel.json` + `api/index.php`,
+usando o runtime comunitário [vercel-php](https://github.com/vercel-community/php)).
+
+1. Suba o repositório para o GitHub.
+2. Na Vercel: **Add New → Project → Import** o repositório (sem framework, sem build command).
+3. Em **Settings → Environment Variables** cadastre as mesmas chaves do `.env.example`
+   (`AI_PROVIDER=gemini`, `GEMINI_API_KEY`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `CRON_TOKEN`, `APP_URL`...).
+4. Deploy.
+
+> ⚠️ **Limitação importante:** o sistema de arquivos da Vercel é somente leitura, exceto `/tmp`,
+> que é **temporário e por instância**. Na Vercel o SQLite é criado em `/tmp/investai.sqlite`:
+> funciona para demonstração, mas **os dados somem** quando a função reinicia/escala e
+> as sessões podem se perder entre instâncias. Para dados persistentes em produção,
+> use um banco hospedado (ex.: Turso/libSQL, que é compatível com SQLite).
 
 ## 📁 Estrutura de Pastas
 
@@ -95,7 +107,7 @@ inventai/
 │   └── api/
 │       └── ai_suggestion.php      # Sugestões de IA
 ├── db/
-│   ├── conexao.php                # Conexão MySQL
+│   ├── conexao.php                # Conexão SQLite
 │   ├── schema.sql                 # Estrutura DB
 │   └── seed.sql                   # Dados iniciais
 ├── Front/
@@ -164,8 +176,8 @@ fetch('backend/api/ai_suggestion.php', {
 ## 🛠️ Tecnologias
 
 **Backend:**
-- PHP 7.4+
-- MySQL 5.7+
+- PHP 8.1+
+- SQLite 3 (via PDO)
 - Google Gemini API
 
 **Frontend:**
@@ -174,9 +186,8 @@ fetch('backend/api/ai_suggestion.php', {
 - JavaScript (vanilla)
 
 **DevOps:**
-- XAMPP
-- Apache 2.4
-- MySQL
+- Servidor embutido do PHP (`php -S`) ou Docker
+- Vercel (vercel-php)
 
 ## 📝 APIs Principais
 
@@ -214,8 +225,8 @@ Este projeto é de uso pessoal/educacional.
 ## 📞 Suporte
 
 Para dúvidas ou problemas:
-- Verifique se XAMPP está rodando
-- Confirme as credenciais do banco de dados
+- Verifique se `php -S localhost:8000 router.php` está rodando
+- Confirme que a pasta `backend/database/data` é gravável
 - Teste a conexão com Google Gemini API
 - Verifique os logs de erro do Apache
 

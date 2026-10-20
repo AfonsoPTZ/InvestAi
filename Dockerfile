@@ -1,7 +1,6 @@
 FROM php:8.2-apache
 
-# Habilitar extensões do MySQL necessárias para o PHP
-RUN docker-php-ext-install mysqli pdo pdo_mysql
+# O banco é SQLite (arquivo local): pdo_sqlite já vem compilado na imagem php:apache.
 
 # Habilitar mod_rewrite (URLs) e mod_headers (usado no .htaccess para
 # remover headers de CSP) e permitir .htaccess (bloqueia .env, .sql, .log em produção)
@@ -28,7 +27,8 @@ RUN rm -f /etc/apache2/mods-enabled/mpm_event.load /etc/apache2/mods-enabled/mpm
 COPY . /var/www/html/
 
 # Dar permissões adequadas
-RUN chown -R www-data:www-data /var/www/html/ \
+RUN mkdir -p /var/www/html/backend/database/data \
+    && chown -R www-data:www-data /var/www/html/ \
     && chmod -R 755 /var/www/html/
 
 # Railway (e outras plataformas PaaS) injetam a porta via variável de ambiente $PORT.

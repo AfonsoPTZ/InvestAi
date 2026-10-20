@@ -15,7 +15,7 @@ if (!isset($_SESSION['usuario_id'])) {
     exit;
 }
 
-$root = dirname(dirname(dirname(__FILE__)));
+$root = dirname(dirname(dirname(dirname(__FILE__))));
 require_once $root . '/backend/database/conexao.php';
 
 $usuarioId = $_SESSION['usuario_id'];

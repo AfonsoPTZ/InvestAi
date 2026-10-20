@@ -5,7 +5,7 @@
 
 class CategoriaResolver {
 
-    public static function resolverCategoria(mysqli $conexao, string $tipo, string $nome): ?string {
+    public static function resolverCategoria(SqliteConnection $conexao, string $tipo, string $nome): ?string {
         $norm = self::normalizar($nome);
         $stmt = $conexao->prepare(
             "SELECT nome FROM categorias WHERE tipo = ? ORDER BY nome"
@@ -36,7 +36,7 @@ class CategoriaResolver {
         return null;
     }
 
-    public static function buscarIdCategoria(mysqli $conexao, string $tipo, string $nome): ?int {
+    public static function buscarIdCategoria(SqliteConnection $conexao, string $tipo, string $nome): ?int {
         $stmt = $conexao->prepare(
             "SELECT id FROM categorias WHERE nome = ? AND tipo = ? LIMIT 1"
         );

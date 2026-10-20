@@ -2,24 +2,17 @@
 // backend/includes/Logger.php — Sistema centralizado de logs de auditoria
 
 require_once __DIR__ . '/../config/ConfigHelper.php';
+require_once __DIR__ . '/../database/Database.php';
 
 class Logger
 {
-    private static function getConnection(): ?mysqli
+    private static function getConnection(): ?SqliteConnection
     {
-        ConfigHelper::load();
-        $conn = @new mysqli(
-            ConfigHelper::get('DB_HOST', ConfigHelper::get('MYSQLHOST', '127.0.0.1')),
-            ConfigHelper::get('DB_USER', ConfigHelper::get('MYSQLUSER', 'root')),
-            ConfigHelper::get('DB_PASS', ConfigHelper::get('MYSQLPASSWORD', '')),
-            ConfigHelper::get('DB_NAME', ConfigHelper::get('MYSQLDATABASE', 'investai')),
-            (int) ConfigHelper::get('DB_PORT', ConfigHelper::get('MYSQLPORT', 3306))
-        );
-        if ($conn->connect_error) {
+        try {
+            return Database::connect();
+        } catch (Throwable $e) {
             return null;
         }
-        $conn->set_charset('utf8mb4');
-        return $conn;
     }
 
     private static function getIp(): string
@@ -72,7 +65,7 @@ class Logger
                 "INSERT INTO logs (nivel, acao, detalhes, status, usuario_id, usuario_email, ip)
                  VALUES (?, ?, ?, ?, ?, ?, ?)"
             );
-            // tipos: s s s s s s s  (usuario_id inserido como string numérica; MySQL converte)
+            // tipos: s s s s s s s  (usuario_id inserido como string numérica; o SQLite converte pela afinidade INTEGER)
             $stmt->bind_param(
                 'sssssss',
                 $nivel,
@@ -85,7 +78,6 @@ class Logger
             );
             $stmt->execute();
             $stmt->close();
-            $conn->close();
         } catch (Throwable $e) {
             // Falha silenciosa — nunca interromper a requisição principal por causa de log
         }

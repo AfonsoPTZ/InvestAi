@@ -6,7 +6,7 @@
 class EditarGanho {
 
     public function __construct(
-        private mysqli $conexao,
+        private SqliteConnection $conexao,
         private int    $usuario_id,
         private int    $mes,
         private int    $ano

@@ -74,7 +74,7 @@ class ToolHandler {
      * Retorna o array de function_declarations para a Gemini API,
      * coletado de getDefinition() de cada tool.
      */
-    public function getAllDefinitions(mysqli $conexao, int $usuario_id, int $mes, int $ano): array {
+    public function getAllDefinitions(SqliteConnection $conexao, int $usuario_id, int $mes, int $ano): array {
         $definitions = [];
         foreach ($this->registry as $toolClass) {
             $tool          = new $toolClass($conexao, $usuario_id, $mes, $ano);
@@ -87,7 +87,7 @@ class ToolHandler {
      * Instancia a tool correspondente ao nome e executa com os parâmetros fornecidos.
      * Retorna o array de resultado da tool.
      */
-    public function dispatch(string $toolName, array $params, mysqli $conexao, int $usuario_id, int $mes, int $ano): array {
+    public function dispatch(string $toolName, array $params, SqliteConnection $conexao, int $usuario_id, int $mes, int $ano): array {
         $toolClass = $this->registry[$toolName] ?? null;
 
         if (!$toolClass) {
